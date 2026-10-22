@@ -1,40 +1,36 @@
-from collections import deque
+b = [" "] * 9
+wins = [(0,1,2), (3,4,5), (6,7,8),
+        (0,3,6), (1,4,7), (2,5,8),
+        (0,4,8), (2,4,6)]
 
 
-def water_jug(a, b, target):
-    q = deque([((0, 0), [(0, 0)])])
-    visited = set()
+p = "X"
 
 
-    while q:
-        (x, y), path = q.popleft()
-
-
-        if (x, y) in visited:
+while True:
+    print(b[0:3], "\n", b[3:6], "\n", b[6:9])
+    try:
+        m = int(input(p + " position (1-9): ")) - 1
+        if m not in range(9) or b[m] != " ":
+            print("Invalid move")
             continue
-        visited.add((x, y))
+    except ValueError:
+        print("Enter a number")
+        continue
 
 
-        if x == target or y == target:
-            print("Solution Steps:")
-            for s in path:
-                print(s)
-            return
+    b[m] = p
 
 
-        states = [
-            (a, y), (x, b), (0, y), (x, 0),
-            (max(0, x-(b-y)), min(b, x+y)),
-            (min(a, x+y), max(0, y-(a-x)))
-        ]
+    if any(all(b[i] == p for i in w) for w in wins):
+        print(b)
+        print(p, "wins!")
+        break
 
 
-        for s in states:
-            if s not in visited:
-                q.append((s, path+[s]))
+    if " " not in b:
+        print("Draw!")
+        break
 
 
-    print("No solution")
-
-
-water_jug(4, 3, 2)
+    p = "O" if p == "X" else "X"
